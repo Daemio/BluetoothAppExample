@@ -14,8 +14,10 @@ import com.example.damian.bluetoothapp.R;
  * Created by Admin on 12.11.2015.
  */
 public class MyArrayAdapter extends ArrayAdapter<BluetoothDevice> {
-    public MyArrayAdapter(Context context, int resource) {
+    ListListener listListener;
+    public MyArrayAdapter(Context context, int resource, ListListener listListener) {
         super(context, resource);
+        this.listListener = listListener;
     }
 
     static class Holder{
@@ -24,7 +26,7 @@ public class MyArrayAdapter extends ArrayAdapter<BluetoothDevice> {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         View v = convertView;
         Holder holder = new Holder();
         if(v==null){
@@ -38,6 +40,16 @@ public class MyArrayAdapter extends ArrayAdapter<BluetoothDevice> {
         BluetoothDevice item = getItem(position);
         holder.tvName.setText(item.getName());
         holder.tvDetails.setText(item.getAddress());
+        v.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listListener.onItemSelected(getItem(position));
+            }
+        });
         return v;
+    }
+
+    public interface ListListener{
+        void onItemSelected(BluetoothDevice device);
     }
 }
